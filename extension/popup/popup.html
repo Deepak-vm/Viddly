@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viddly</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+    <div class="container">
+        <button class="theme-toggle" id="themeToggle">🌙</button>
+        <div class="header">
+            <h1>Viddly</h1>
+            <p class="tagline">Download video freely</p>
+            <div class="status-indicator" id="statusIndicator">
+                <span class="status-dot"></span>
+                <span id="connectionStatus">Connecting...</span>
+            </div>
+        </div>
+
+        <div class="input-section">
+            <label for="urlInput">YouTube URL:</label>
+            <div class="input-group">
+                <input type="text" id="urlInput" placeholder="Paste YouTube video or playlist URL here...">
+                <button id="pasteBtn" class="btn-secondary">Paste</button>
+            </div>
+            <button id="analyzeBtn" class="btn-primary">Analyze URL</button>
+        </div>
+
+        <div id="loadingSection" class="loading-section hidden">
+            <div class="spinner"></div>
+            <p>Analyzing URL...</p>
+        </div>
+
+        <div id="videoInfo" class="video-info hidden">
+            <div class="video-thumbnail">
+                <img id="thumbnail" src="" alt="Video thumbnail">
+            </div>
+            <div class="video-details">
+                <h3 id="videoTitle"></h3>
+                <p id="videoDuration"></p>
+                <p id="videoUploader"></p>
+            </div>
+        </div>
+
+        <div id="playlistInfo" class="playlist-info hidden">
+            <h3>Playlist Options</h3>
+            <div class="playlist-controls">
+                <label>
+                    <input type="radio" name="playlistOption" value="all" checked>
+                    Download entire playlist
+                </label>
+                <label>
+                    <input type="radio" name="playlistOption" value="select">
+                    Select specific videos
+                </label>
+            </div>
+            <div id="playlistVideos" class="playlist-videos hidden"></div>
+        </div>
+
+        <div id="qualitySection" class="quality-section hidden">
+            <h3>Download Options</h3>
+            <div class="quality-grid">
+                <div class="quality-group">
+                    <h4>Video Quality</h4>
+                    <select id="videoQuality">
+                        <option value="1080p">1080p (Full HD)</option>
+                        <option value="720p" selected>720p (HD)</option>
+                        <option value="480p">480p (SD)</option>
+                        <option value="360p">360p</option>
+                        <option value="240p">240p</option>
+                        <option value="144p">144p</option>
+                    </select>
+                </div>
+                <div class="quality-group">
+                    <h4>Format</h4>
+                    <select id="downloadFormat">
+                        <option value="mp4">MP4 (Video)</option>
+                        <option value="mp3">MP3 (Audio Only)</option>
+                        <option value="m4a">M4A (Audio Only)</option>
+                        <option value="webm">WebM (Video)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="download-folder">
+                <h4>Download Location</h4>
+                <div class="folder-selector">
+                    <input type="text" id="downloadFolder" placeholder="Default folder" readonly>
+                    <button id="chooseFolderBtn" class="btn-secondary">Browse...</button>
+                    <input type="file" id="folderPicker" webkitdirectory directory style="display: none;">
+                </div>
+            </div>
+        </div>
+
+        <div id="downloadHistory" class="download-history hidden">
+            <h3>Download History</h3>
+            <div class="history-list" id="historyList">
+                <!-- Download history items will be added here dynamically -->
+            </div>
+        </div>
+
+        <div id="downloadSection" class="download-section hidden">
+            <button id="downloadBtn" class="btn-download">Start Download</button>
+            <div id="downloadProgress" class="progress-container hidden">
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+                <div class="progress-text">
+                    <span id="progressPercent">0%</span>
+                    <span id="downloadSpeed"></span>
+                </div>
+                <button id="cancelBtn" class="btn-cancel">Cancel</button>
+            </div>
+        </div>
+
+        <div id="errorSection" class="error-section hidden">
+            <div class="error-message">
+                <strong>Error:</strong>
+                <span id="errorText"></span>
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            <p><strong>Disclaimer:</strong> Please ensure you have the right to download content and comply with
+                YouTube's terms of service.</p>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>

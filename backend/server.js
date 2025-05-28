@@ -75,12 +75,37 @@ app.post('/analyze', async (req, res) => {
             }
 
             try {
-                const videoInfo = JSON.parse(output);
+                // Robustly handle multiple JSON objects (e.g., playlist)
+                const jsonLines = output
+                    .split('\n')
+                    .map(line => line.trim())
+                    .filter(line => line.startsWith('{') && line.endsWith('}'));
 
-                // Check if it's a playlist
-                const isPlaylist = videoInfo._type === 'playlist';
+                if (jsonLines.length === 0) {
+                    throw new Error('No valid JSON found in yt-dlp output');
+                }
 
-                if (isPlaylist) {
+                // If only one JSON object, parse it directly
+                // If multiple, parse as an array (playlist)
+                const videoInfo = jsonLines.length === 1
+                    ? JSON.parse(jsonLines[0])
+                    : jsonLines.map(line => JSON.parse(line));
+
+                // Check if it's a playlist (array or _type === 'playlist')
+                if (Array.isArray(videoInfo)) {
+                    // Playlist: each entry is a video
+                    res.json({
+                        type: 'playlist',
+                        videoCount: videoInfo.length,
+                        videos: videoInfo.map(entry => ({
+                            id: entry.id,
+                            title: entry.title,
+                            duration: entry.duration,
+                            thumbnail: entry.thumbnail
+                        }))
+                    });
+                } else if (videoInfo._type === 'playlist') {
+                    // Playlist object (yt-dlp sometimes outputs a single playlist object)
                     res.json({
                         type: 'playlist',
                         title: videoInfo.title,
@@ -93,37 +118,31 @@ app.post('/analyze', async (req, res) => {
                         })) : []
                     });
                 } else {
+                    // Single video
                     res.json({
                         type: 'video',
                         videoId: videoInfo.id,
                         title: videoInfo.title,
                         duration: videoInfo.duration,
                         thumbnail: videoInfo.thumbnail,
-                        uploader: videoInfo.uploader,
-                        formats: videoInfo.formats ? videoInfo.formats.map(format => ({
-                            format_id: format.format_id,
-                            ext: format.ext,
-                            quality: format.quality,
-                            height: format.height
-                        })) : []
+                        uploader: videoInfo.uploader
                     });
                 }
-            } catch (parseError) {
-                console.error('JSON parse error:', parseError);
-                res.status(500).json({ error: 'Failed to parse video information' });
+            } catch (error) {
+                console.error('Analyze error:', error);
+                res.status(500).json({ error: 'Failed to analyze video/playlist' });
             }
         });
-
     } catch (error) {
         console.error('Analyze error:', error);
-        res.status(500).json({ error: 'Failed to analyze URL' });
+        res.status(500).json({ error: 'Failed to analyze video/playlist' });
     }
 });
 
-// Download endpoint
+
 app.post('/download', (req, res) => {
     try {
-        const { url, quality = '720p', format = 'mp4', downloadFolder } = req.body;
+        const { url, quality = '720p', format = 'mp4', downloadFolder, selectedIds } = req.body;
 
         if (!url) {
             return res.status(400).json({ error: 'URL is required' });
@@ -157,6 +176,11 @@ app.post('/download', (req, res) => {
             url
         ];
 
+        // Add playlist selection if provided
+        if (selectedIds && Array.isArray(selectedIds) && selectedIds.length > 0) {
+            args.push('--playlist-items', selectedIds.join(','));
+        }
+
         // Add quality/format options
         if (format === 'mp3') {
             args.push('--extract-audio', '--audio-format', 'mp3');
@@ -173,12 +197,18 @@ app.post('/download', (req, res) => {
             const output = data.toString();
             res.write(`data: ${JSON.stringify({ type: 'progress', data: output })}\n\n`);
 
-            // Parse progress if available
-            const progressMatch = output.match(/(\d+\.?\d*)%/);
-            if (progressMatch) {
-                downloadStatus.progress = parseFloat(progressMatch[1]);
+            // Improved: parse all percentage matches in the output
+            const progressRegex = /(\d{1,3}\.\d+)%/g;
+            let match;
+            let lastProgress = null;
+            while ((match = progressRegex.exec(output)) !== null) {
+                lastProgress = parseFloat(match[1]);
+            }
+            if (lastProgress !== null) {
+                downloadStatus.progress = lastProgress;
             }
         });
+
 
         currentDownload.stderr.on('data', (data) => {
             const error = data.toString();

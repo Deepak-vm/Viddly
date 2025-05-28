@@ -1,4 +1,4 @@
-# YouTube Video Downloader Chrome Extension
+#Viddly
 
 A Chrome extension that enables users to download YouTube videos and playlists with quality selection and playlist management.
 

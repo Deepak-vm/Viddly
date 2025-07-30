@@ -11,15 +11,158 @@
 }
 
 [data-theme="dark"] {
-    --bg-primary: #1a1a1a;
-    --bg-secondary: #2d2d2d;
-    --text-primary: #ffffff;
-    --text-secondary: #b3b3b3;
-    --border-color: #404040;
-    --gradient-start: #4a5568;
-    --gradient-end: #2d3748;
-    --error-bg: #442326;
-    --error-border: #842029;
+    --bg-primary: #232323;
+    --bg-secondary: #292929;
+    --text-primary: #e0e0e0;
+    --text-secondary: #bdbdbd;
+    --border-color: #333;
+    --gradient-start: #232323;
+    --gradient-end: #232323;
+    --error-bg: #3a2323;
+    --error-border: #b71c1c;
+}
+
+body[data-theme="dark"] {
+    background: #181818 !important;
+}
+
+.container[data-theme="dark"],
+[data-theme="dark"] .container {
+    background: var(--bg-primary);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
+}
+
+[data-theme="dark"] .header {
+    border-bottom: 2px solid #333;
+}
+
+[data-theme="dark"] .header h1 {
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .tagline {
+    color: #bdbdbd;
+}
+
+[data-theme="dark"] .status-indicator {
+    color: #bdbdbd;
+}
+
+[data-theme="dark"] .input-section label {
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] input[type="text"] {
+    background: #292929;
+    color: #e0e0e0;
+    border: 2px solid #333;
+}
+
+[data-theme="dark"] input[type="text"]:focus {
+    border-color: #7c4dff;
+}
+
+[data-theme="dark"] .btn-primary {
+    background: linear-gradient(135deg, #7c4dff 0%, #536dfe 100%);
+    color: #fff;
+}
+
+[data-theme="dark"] .btn-secondary {
+    background: #232323;
+    color: #bdbdbd;
+    border: 1px solid #444;
+}
+
+[data-theme="dark"] .btn-secondary:hover {
+    background: #333;
+}
+
+[data-theme="dark"] .btn-download {
+    background: linear-gradient(135deg, #00e676 0%, #1de9b6 100%);
+    color: #232323;
+}
+
+[data-theme="dark"] .btn-cancel {
+    background: #b71c1c;
+    color: #fff;
+}
+
+[data-theme="dark"] .video-info {
+    background: #292929;
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .video-details h3,
+[data-theme="dark"] .video-details p {
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .playlist-info {
+    background: #333;
+    border: 1px solid #444;
+}
+
+[data-theme="dark"] .playlist-info h3 {
+    color: #ffd600;
+}
+
+[data-theme="dark"] .quality-section {
+    background: #232323;
+}
+
+[data-theme="dark"] .quality-section h3 {
+    color: #00bcd4;
+}
+
+[data-theme="dark"] .download-folder input {
+    background: #292929;
+    color: #bdbdbd;
+    border: 1px solid #444;
+}
+
+[data-theme="dark"] select {
+    background: #292929;
+    color: #e0e0e0;
+    border: 1px solid #444;
+}
+
+[data-theme="dark"] .progress-bar {
+    background: #333;
+}
+
+[data-theme="dark"] .progress-fill {
+    background: linear-gradient(90deg, #00e676, #1de9b6);
+}
+
+[data-theme="dark"] .error-section {
+    background: #3a2323;
+    border: 1px solid #b71c1c;
+}
+
+[data-theme="dark"] .error-message {
+    color: #ff8a80;
+}
+
+[data-theme="dark"] .disclaimer {
+    background: #232323;
+    border-top: 2px solid #333;
+    color: #bdbdbd;
+}
+
+[data-theme="dark"] .download-history {
+    background: #292929;
+}
+
+[data-theme="dark"] .history-item {
+    border-bottom: 1px solid #333;
+}
+
+[data-theme="dark"] .history-item-title {
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .history-item-details {
+    color: #bdbdbd;
 }
 
 * {
@@ -44,6 +187,7 @@ body {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
+/* Add to popup.css */
 .tagline {
     margin-top: -10px;
     font-size: 0.95em;
@@ -432,19 +576,6 @@ select {
     font-size: 14px;
 }
 
-.disclaimer {
-    background: #f1f3f4;
-    border-radius: 6px;
-    padding: 12px;
-    margin-top: 20px;
-    border-top: 2px solid #e0e0e0;
-}
-
-.disclaimer p {
-    font-size: 11px;
-    color: #666;
-    line-height: 1.4;
-}
 
 .hidden {
     display: none !important;
